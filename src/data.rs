@@ -1,3 +1,5 @@
+use std::collections::{HashMap, hash_map::Entry};
+
 pub struct Dialogue {
     display_name: String,
     lines: Vec<String>,
@@ -53,8 +55,9 @@ impl Dialogue {
     }
 }
 
+type ConvoLine = Vec<(String, String)>;
 pub struct Conversation {
-    lines: Vec<String>,
+    lines: ConvoLine,
 }
 
 impl Conversation {
@@ -68,9 +71,9 @@ impl Conversation {
             ));
         }
         
-        let mut lines: Vec<String> = Vec::new();
+        let mut lines: ConvoLine = ConvoLine::new();
         let mut push_format_line = |display_name: &str, text: &str| {
-            lines.push(format!("{}: {}", display_name, text));
+            lines.push((display_name.to_string(), text.to_string()));
         };
 
         for i in 0..main_dialogue_length {
@@ -88,9 +91,23 @@ impl Conversation {
         })
     }
 
-    pub fn print(&self) {
-        for line in &self.lines {
-            println!("{}", line);
+    pub fn print(&self, format: bool) {
+        let highest_length = if format {
+            self.lines
+                .iter()
+                .map(|(name, _)| name.len())
+                .max()
+                .unwrap_or_default()
+        } else { 0 };
+
+        for (name, text) in &self.lines {
+            if format {
+                for _ in 0..highest_length.saturating_sub(name.len()) {
+                    print!(" ");
+                }
+            }
+
+            println!("{}: {}", name, text);
         }
     }
 }

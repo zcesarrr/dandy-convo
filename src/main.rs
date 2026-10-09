@@ -65,7 +65,7 @@ fn run(config: &Config) -> Result<(), String> {
     data::Conversation::new(
         &main_dialogue, 
         &participant_dialogue
-    )?.print();
+    )?.print(true);
 
     Ok(())
 }
