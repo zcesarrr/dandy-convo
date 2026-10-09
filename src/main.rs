@@ -4,6 +4,7 @@ struct Config {
     main_name: String,
     participant_name: String,
     variant: u8,
+    unformat: bool,
 }
 
 impl Config {
@@ -15,6 +16,7 @@ impl Config {
         let main_name = args[1].clone();
         let participant_name = args[2].clone();
         let mut variant: u8 = 1;
+        let mut unformat: bool = false;
 
         if args.len() >= 3 {
             for i in 3..args.len() {
@@ -29,6 +31,8 @@ impl Config {
 
                     if variant == 0 { variant = 1 }
                 }
+
+                if args[i] == "--unformat" { unformat = true; }
             }
         }
 
@@ -36,6 +40,7 @@ impl Config {
             main_name,
             participant_name,
             variant: variant - 1,
+            unformat,
         })
     }
 }
@@ -65,7 +70,7 @@ fn run(config: &Config) -> Result<(), String> {
     data::Conversation::new(
         &main_dialogue, 
         &participant_dialogue
-    )?.print(true);
+    )?.print(!config.unformat);
 
     Ok(())
 }

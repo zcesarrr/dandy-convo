@@ -1,5 +1,3 @@
-use std::collections::{HashMap, hash_map::Entry};
-
 pub struct Dialogue {
     display_name: String,
     lines: Vec<String>,
@@ -55,9 +53,9 @@ impl Dialogue {
     }
 }
 
-type ConvoLine = Vec<(String, String)>;
+type ConvoLine = (String, String);
 pub struct Conversation {
-    lines: ConvoLine,
+    lines: Vec<ConvoLine>,
 }
 
 impl Conversation {
@@ -71,7 +69,7 @@ impl Conversation {
             ));
         }
         
-        let mut lines: ConvoLine = ConvoLine::new();
+        let mut lines: Vec<ConvoLine> = Vec::new();
         let mut push_format_line = |display_name: &str, text: &str| {
             lines.push((display_name.to_string(), text.to_string()));
         };
