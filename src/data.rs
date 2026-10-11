@@ -5,9 +5,7 @@ pub struct Dialogue {
 
 impl Dialogue {
     pub fn build(name: &str, participant_name: &str, target_variant: u8) -> Result<Self, String> {
-        let contents = std::fs::read_to_string(
-            format!("dialogues/{}", name)
-        ).map_err(|_| format!("\"{}\" is not a valid name", name))?;
+        let contents = super::dialogues::get_contents(name)?;
 
         let contents_lines: Vec<&str> = contents.lines().collect();
         let contents_lines_length = contents_lines.len();
@@ -30,7 +28,7 @@ impl Dialogue {
                 }
 
                 if contents_lines[j] != "" {
-                    dialogue_lines.push(contents_lines[j].to_string());
+                    dialogue_lines.push(contents_lines[j].to_owned());
                     continue;
                 }
 
@@ -39,7 +37,7 @@ impl Dialogue {
         }
 
         Ok(Self {
-            display_name: contents_lines[0].to_string(),
+            display_name: contents_lines[0].to_owned(),
             lines: dialogue_lines,
         })
     }
@@ -71,7 +69,7 @@ impl Conversation {
         
         let mut lines: Vec<ConvoLine> = Vec::new();
         let mut push_format_line = |display_name: &str, text: &str| {
-            lines.push((display_name.to_string(), text.to_string()));
+            lines.push((display_name.to_owned(), text.to_owned()));
         };
 
         for i in 0..main_dialogue_length {

@@ -1,3 +1,4 @@
+mod dialogues;
 mod data;
 
 struct Config {
@@ -10,7 +11,7 @@ struct Config {
 impl Config {
     fn build(args: &[String]) -> Result<Config, String> {
         if args.len() < 3 {
-            return Err("not enough participants".to_string());
+            return Err("not enough participants".to_owned());
         }
 
         let main_name = args[1].clone();
@@ -22,7 +23,7 @@ impl Config {
             for i in 3..args.len() {
                 if args[i] == "--variant" {
                     let value = args.get(i + 1)
-                        .ok_or_else(|| "missing variant number".to_string())?;
+                        .ok_or_else(|| "missing variant number".to_owned())?;
 
                     variant = value.parse()
                         .map_err(|_| {
