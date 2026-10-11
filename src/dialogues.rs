@@ -1,6 +1,4 @@
-use include_dir::{include_dir, Dir};
-
-const DIALOGUES_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/dialogues");
+const DIALOGUES_DIR: include_dir::Dir = include_dir::include_dir!("$CARGO_MANIFEST_DIR/dialogues");
 
 pub fn get_contents(toon_name: &str) -> Result<String, String> {
     let file = DIALOGUES_DIR

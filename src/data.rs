@@ -1,3 +1,13 @@
+fn name_normalization(name: &str) -> String {
+    let name = name.trim().to_lowercase();
+
+    if name == "razzle" || name == "dazzle" || name == "razzle_and_dazzle" {
+        return String::from("razzle_dazzle");
+    }
+
+    name
+}
+
 pub struct Dialogue {
     display_name: String,
     lines: Vec<String>,
@@ -5,7 +15,7 @@ pub struct Dialogue {
 
 impl Dialogue {
     pub fn build(name: &str, participant_name: &str, target_variant: u8) -> Result<Self, String> {
-        let contents = super::dialogues::get_contents(name)?;
+        let contents = super::dialogues::get_contents(&name_normalization(name))?;
 
         let contents_lines: Vec<&str> = contents.lines().collect();
         let contents_lines_length = contents_lines.len();
@@ -13,7 +23,7 @@ impl Dialogue {
         let mut variant_index = 0;
         let mut dialogue_lines: Vec<String> = Vec::new();
         'main: for i in 0..contents_lines_length {
-            if contents_lines[i] != format!(".{}", participant_name) {
+            if contents_lines[i] != format!(".{}", &name_normalization(participant_name)) {
                 continue;
             }
 
