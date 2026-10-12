@@ -10,6 +10,10 @@ struct Config {
 
 impl Config {
     fn build(args: &[String]) -> Result<Config, String> {
+        if args[1] == "toons" {
+            print_toons();
+        }
+
         if args.len() < 3 {
             return Err("not enough participants".to_owned());
         }
@@ -44,6 +48,33 @@ impl Config {
             unformat,
         })
     }
+}
+
+fn print_toons() {
+    let names = dialogues::get_names();
+
+    let highest_length = names
+            .map(|(name, _)| name.len())
+            .max()
+            .unwrap_or_default();
+
+    let print_spaces = |text: &str| 
+        for _ in 0..highest_length.saturating_sub(text.len()) + 8 {
+            print!(" ");
+        };
+
+    print!("ID"); print_spaces("ID"); print!("NAME");
+    println!();
+    for (id, name) in dialogues::get_names() {
+        print!("{}", id);
+
+        print_spaces(&name);
+        
+        print!("{}", name);
+        println!()
+    }
+
+    std::process::exit(0);
 }
 
 fn run(config: &Config) -> Result<(), String> {

@@ -11,6 +11,18 @@ pub fn get_contents(toon_name: &str) -> Result<String, String> {
     Ok(contents.to_owned())
 }
 
+pub fn get_names() -> impl Iterator<Item = (String, String)> {
+    DIALOGUES_DIR
+        .files()
+        .map(|file| {
+            let contents = file.contents_utf8().unwrap();
+            (
+                file.path().file_name().unwrap().to_string_lossy().into_owned(),
+                contents.lines().next().unwrap().to_owned(),
+            )
+        })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -20,5 +32,13 @@ mod tests {
         let gigi_dialogues = get_contents("gigi").unwrap();
 
         assert!(gigi_dialogues.contains("Heeey wassup?"));
+    }
+
+    #[test]
+    fn getting_dialogue_names() {
+        let mut names = get_names();
+
+        assert!(names.any(|(id, _)| id == "gigi"));
+        assert!(names.any(|(_, name)| name == "Razzle & Dazzle"));
     }
 }
